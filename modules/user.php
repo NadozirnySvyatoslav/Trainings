@@ -49,6 +49,9 @@ class User extends GenericObject {
 		$data ['name'] = $data ['last_name'] . ' ' . $data ['first_name'];
 		$data ['created'] = date ( 'Y-m-d H:i:s', time () );
 		$data ['active'] = 'true';
+		if (auto_user_approve == 'y')
+		    $data ['role_id'] = self::USER;
+
 		return parent::add ( $data );
 	}
 	function roleCheck($val) {

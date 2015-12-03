@@ -22,6 +22,7 @@ $pages = array (
 		'mycourses' => 'MyCoursesPage',
 		'learn' => 'LearnPage',
 		'exam' => 'ExamPage',
+		'result' => 'ResultPage',
 		'admin_trainings' => 'AdminPlansPage',
 		'admin_training' => 'AdminPlanPage',
 		'admin_users' => 'AdminUsersPage',

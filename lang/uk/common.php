@@ -1,5 +1,4 @@
 <?php
-define ( NL, "\n" );
 define ( Search, 'Шукати текст...' );
 define ( Search_Button, 'Пошук' );
 define ( Filter, 'Фільтр' );

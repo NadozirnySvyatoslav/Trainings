@@ -50,9 +50,9 @@ EOF;
 				$finish = new DateTime ( $data ['finish'] );
 				if ($now > $finish) {
 					$data ['result_desc'] = "<span class=\"label label-danger\">{$translator->Overtime}</span>";
-					$actions = "<a href=\"/course/{$data[course_id]}\" class=\"btn btn-default btn-lg\">
+					$actions = "<a href=\"/course/{$data[course_id]}\" class=\"btn btn-default btn-md\">
 	        <span class=\"glyphicon glyphicon glyphicon-repeat\"></span> {$translator->Repeat}</a>
-	        <a href=\"/mycourses/delete/{$data[id]}\" class=\"btn btn-default btn-lg\"
+	        <a href=\"/mycourses/delete/{$data[id]}\" class=\"btn btn-default btn-md\"
 	        onclick='return confirm(\"{$translator->AreYouSure}\");'>
 	        <span class=\"glyphicon glyphicon glyphicon-trash\"></span> {$translator->Delete}</a>";
 				} else {
@@ -80,12 +80,12 @@ EOF;
 							break;
 						case Training::EXAM :
 						case Training::EXAM_STARTED :
-							$data ['result_desc'] = "<span class=\"label label-danger\">{$translator->NotCertified}</span>" . "<div>{$translator->Result}: " . intval ( $data ['result'] ) . "/{$data[questions]}</div>";
+							$data ['result_desc'] = "<span class=\"label label-danger\">{$translator->NotCertified}</span>" . "<div>{$translator->Result}: " . intval ( $data ['result'] ) . "%({$data[answers]}/{$data[questions]})</div>";
 							$actions = "<a href=\"/exam/{$data[exam_hash]}/\" class=\"btn btn-warning btn-md\">
 	    <span class=\"glyphicon glyphicon-check\"></span> {$translator->Test}</a>";
 							break;
 						case Training::FAILED :
-							$data ['result_desc'] = "<span class=\"label label-danger\">{$translator->NotCertified}</span>" . "<div>{$translator->Result}: " . intval ( $data ['result'] ) . "/{$data[questions]}</div>";
+							$data ['result_desc'] = "<span class=\"label label-danger\">{$translator->NotCertified}</span>" . "<div>{$translator->Result}: " . intval ( $data ['result'] ) . "%({$data[answers]}/{$data[questions]})</div>";
 							$actions = "<a href=\"/course/{$data[course_id]}\" class=\"btn btn-default btn-md\">
             <span class=\"glyphicon glyphicon glyphicon-repeat\"></span> {$translator->Repeat}</a>
             <a href=\"/mycourses/delete/{$data[id]}\" class=\"btn btn-default btn-md\"
@@ -95,7 +95,7 @@ EOF;
 						
 						case Training::FINISHED :
 							if ($data ['exam'] == 't') {
-								$data ['result_desc'] = "<span class=\"label label-success\">{$translator->Certified}</span>" . "<div>{$translator->Result}: " . intval ( $data ['result'] ) . "/{$data[questions]}</div>";
+								$data ['result_desc'] = "<span class=\"label label-success\">{$translator->Certified}</span>" . "<div>{$translator->Result}: " . intval ( $data ['result'] ) . "%({$data[answers]}/{$data[questions]})</div>";
 								$actions = "<a href=\"/certificate/{$data[course_hash]}\" class=\"btn btn-success btn-md\">
 		<span class=\"glyphicon glyphicon-certificate\"></span> {$translator->Certificate}</a>";
 							} else {

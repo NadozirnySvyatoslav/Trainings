@@ -11,6 +11,7 @@ include LC_PATH . '/plans.php';
  * @author Nadozirny_SV
  *        
  */
+
 class TrainingsPage extends AuthorizedPage {
 	function displayBody() {
 		parent::displayBody ();
@@ -56,6 +57,7 @@ class TrainingsPage extends AuthorizedPage {
 		
 		echo <<< EOF
 <h2  class="page-header">{$translator->Plans_header} <span class="badge">$cnt</span></h2>
+    <!-- disable filter temporary
     <div class="row">
 	<div class="btn-group">
 	<button class="btn btn-sm btn-default"  data-toggle="collapse" data-target="#filter">
@@ -63,6 +65,7 @@ class TrainingsPage extends AuthorizedPage {
 	</button>
 	</div>
     </div>
+
     <div class="row">
         <div class="col-md-5 collapse" id="filter">
 	    <form role="form" class="form-horizontal" action="?" method="get">
@@ -96,7 +99,22 @@ class TrainingsPage extends AuthorizedPage {
 		</div>
 	    </form>
 	</div>
-    </div>
+    </div> -->
+
+EOF;
+		$enum = $category->enumerate ( null );
+		if ($enum) {
+			foreach ( $enum as $key => $val ) {
+				if ($val ['id'] != 0)
+					$items [$val ['id']] = $val;
+			}
+		}
+		$course = new Course ();
+		$training = new Training ();
+		
+		$enum = $plan->enumerate ( $search, $offset, ITEMS_IN_PAGE );
+		if (is_object ( $enum )) {
+		    echo <<< EOF
 {$pagination}
           <div class="table-responsive">
             <table class="table table-striped">
@@ -112,18 +130,6 @@ class TrainingsPage extends AuthorizedPage {
               <tbody>
 
 EOF;
-		$enum = $category->enumerate ( null );
-		if ($enum) {
-			foreach ( $enum as $key => $val ) {
-				if ($val ['id'] != 0)
-					$items [$val ['id']] = $val;
-			}
-		}
-		$course = new Course ();
-		$training = new Training ();
-		
-		$enum = $plan->enumerate ( $search, $offset, ITEMS_IN_PAGE );
-		if (is_object ( $enum )) {
 			$i = 1 + $offset;
 			foreach ( $enum as $key => $data ) {
 				$c_data = $course->get ( array (
@@ -144,13 +150,15 @@ EOF;
                 </tr>" . NL;
 				$i ++;
 			}
-		}
-		
 		echo <<< EOF
 	    </table>
 	</div>
 
 EOF;
+		}else{
+		    echo $translator->No_trainings;
+
+		}
 	}
 	function displayHeader() {
 		parent::displayHeader ();

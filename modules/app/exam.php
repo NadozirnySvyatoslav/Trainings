@@ -211,10 +211,12 @@ EOF;
 					break;
 				case self::NOTFOUND :
 					echo <<< EOF
+    <div class="embed-responsive embed-responsive-16by9" id="fullscreen_media">
     <div class="bs-callout bs-callout-info" id="callout-type-b-i-elems">
     <h4>{$translator->Not_found}</h4>
     <p>{$translator->Not_found_Desc}</p>
     <p class="text-muted">{$translator->BackExam}</p>
+    </div>
     </div>
 
 EOF;
@@ -238,7 +240,7 @@ EOF;
 	  <ul class="pager">
 	    <li class="previous"><a href="$back" id="back"><span aria-hidden="true">&larr;</span> {$translator->Back}</a></li>
 	    <li class="top"><a href="0" id="top">{$translator->Top}</a>|
-		<a href="/test/{$t_data[id]}" onclick='return confirm("{$translator->AreYouSure}");'>{$translator->Finish}</a></li>
+		<a href="/result/{$t_data[id]}" onclick='return confirm("{$translator->AreYouSure}");'>{$translator->Finish}</a></li>
 	    <li class="next"><a href="$next" id="next">{$translator->Next} <span aria-hidden="true">&rarr;</span></a></li>
 	  </ul>
 	</nav>

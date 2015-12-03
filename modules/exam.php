@@ -31,6 +31,16 @@ class Exam extends GenericObject {
 			throw new Exception ( "Exam is not exists", self::NOT_EXISTS );
 		}
 	}
+        function enumerateResult($training_id) {
+                $db = new DB ();
+                $query = "SELECT questions.data as question,questions.answer=exams.answer as result FROM exams ".
+			"INNER JOIN questions ON questions.id=exams.question_id ".
+			"WHERE exams.training_id=".$training_id." ".
+			"ORDER BY exams.id ";
+                $db->select ( $query );
+                if ($db->valid ())
+                        return $db;
+        }
 	function trainingCheck($val) {
 		return 'exams.training_id = ' . intval ( $val );
 	}

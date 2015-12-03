@@ -34,11 +34,13 @@ class Training extends GenericObject {
 	}
 	function checkFinish($user_id, $course_id) {
 		$db = new DB ();
-		$query = "SELECT count(*) as cnt FROM {$this->tablename} " . "WHERE finish > 'now' AND status_id != " 
-				. Training::DELETED . " AND status_id != " . Training::FINISHED . " " . "AND ( status_id = " 
-				. Training::EXAM . " OR finished IS NULL) " . "AND user_id=" . intval ( $user_id ) 
-				. " AND course_id=" . intval ( $course_id );
-		
+		$query = "SELECT count(*) as cnt FROM {$this->tablename} " . "WHERE finish > 'now'".
+				" AND status_id != " . Training::DELETED . 
+				" AND status_id != " . Training::FAILED . 
+				" AND status_id != " . Training::FINISHED .  
+				" AND ( status_id = " . Training::EXAM . " OR finished IS NULL)" . 
+				" AND user_id=" . intval ( $user_id ) .
+				" AND course_id=" . intval ( $course_id );
 		$db->select ( $query );
 		if ($db->valid ()) {
 			$res = $db->current ();
@@ -48,7 +50,12 @@ class Training extends GenericObject {
 	}
 	function getActiveCount($id) {
 		$db = new DB ();
-		$query = "SELECT count(*) as cnt  FROM {$this->tablename} WHERE finish > 'now' AND status_id != " . Training::DELETED . " AND active=true AND status_id != " . Training::FINISHED . " AND user_id=" . intval ( $id );
+		$query = "SELECT count(*) as cnt  FROM {$this->tablename} WHERE finish > 'now' ".
+			" AND status_id != " . Training::DELETED . 
+			" AND status_id != " . Training::FAILED . 
+			" AND status_id != " . Training::FINISHED . 
+			" AND active=true".
+			" AND user_id=" . intval ( $id );
 		$db->select ( $query );
 		if ($db->valid ()) {
 			$res = $db->current ();
@@ -86,7 +93,8 @@ INNER JOIN users ON users.id={$this->tablename}.user_id";
     trainings.course_hash as course_hash,
     trainings.exam_hash as exam_hash,
     trainings.result as result,
-    courses.questions as questions,
+    trainings.questions as questions,
+    trainings.answers as answers,
     trainings.tries as tries,
     courses.exam as exam,
     trainings.examed as examed,

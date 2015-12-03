@@ -192,6 +192,7 @@ EOF;
 	    </form>
 	</div>
     </div>
+    
 {$pagination}
           <div class="table-responsive">
             <table class="table table-striped">

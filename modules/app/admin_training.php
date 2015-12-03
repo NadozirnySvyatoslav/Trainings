@@ -217,6 +217,7 @@ EOF;
 			$enum = $training->enumerate ( array (
 					'plan_id' => $data ['id'] 
 			) );
+			if (is_object($enum))
 			foreach ( $enum as $val ) {
 				$u_data = $user->get ( array (
 						'id' => $val ['user_id'] 
@@ -244,7 +245,7 @@ $users
 </small>
 <div class="list-group totop" id="usermenu" >
 </div>
-<input type="text" name="searchuser" id="searchuser" class="form-control input-lg" placeholder="{$translator->Search}">
+<input type="text" name="searchuser" id="searchuser" class="form-control input-md" placeholder="{$translator->Search_user}">
 </div>
 
 EOF;

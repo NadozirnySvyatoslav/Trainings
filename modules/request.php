@@ -45,8 +45,8 @@ class Request extends GenericObject {
 		}
 		$data ['finish'] = $date->format ( 'Y-m-d H:i' );
 		$data ['user_id'] = $request ['user_id'];
-		
-		if ($course ['format_id'] == Course::ONLINE) {
+		$data ['status_id'] = Training::CREATED;		
+		if ($course ['format_id'] == Course::ONLINE || $course ['format_id'] == Course::WEBCAST ) {
 			$data ['course_hash'] = md5 ( $data ['user_id'] . $data ['course_id'] . $data ['start'] );
 		}
 		$data ['tries'] = 0;
@@ -54,7 +54,7 @@ class Request extends GenericObject {
 			$data ['exam_hash'] = md5 ( $data ['user_id'] . $data ['course_id'] . $data ['start'] . $data ['tries'] );
 		}
 		$data ['request_id'] = $id;
-		$data ['status_id'] = Training::CREATED;
+
 		$data ['active'] = 'true';
 		$training->add ( $data );
 		$this->disable ( $id );

@@ -8,7 +8,7 @@ define ( Dismiss, 'Відмінити' );
 define ( Learn, 'Перейти' );
 define ( Repeat, 'Повторити' );
 define ( Certificate, 'Сертифікат' );
-define ( Test, 'Оцінка' );
+define ( Test, 'Оцінювання' );
 
 define ( Certified, 'Підтверджено' );
 define ( Not_started, 'Не пройдено' );
