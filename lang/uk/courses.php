@@ -30,7 +30,7 @@ define ( Need_approve, 'Потребує підтвердження адміні
 define ( Exam, "Обов'язковий екзамен для підтвердження проходження курсу." );
 define ( Exam_Duration, 'Тривалість тестування' );
 define ( Exam_Duration_Desc, 'Тривалість тестування в хвилинах.' );
-
+define ( File_Manager, 'Файли');
 define ( Questions_Link, 'Перелік питань' );
 define ( Questions_Desc, 'Загальна кількість питань, яку буде запропоновано в тестуванні.' );
 define ( Download_Archive, 'Скачати ZIP-архів курсу' );

@@ -14,8 +14,8 @@ class ResultPage extends AuthorizedPage {
 	const ERROR = 0;
 	const NOTFOUND = 1;
 	const TIMEOUT = 2;
-	//minimal percent for success exam, %
-	const MIN_RESULT_FOR_SUCCESS = 75;//75%
+	// minimal percent for success exam, %
+	const MIN_RESULT_FOR_SUCCESS = 75; // 75%
 	function init() {
 		$this->id = array_shift ( $this->param );
 		$course = new Course ();
@@ -31,38 +31,38 @@ class ResultPage extends AuthorizedPage {
 			case Training::EXAM_STARTED :
 				// check result for test and set status FAILED or FINISHED
 				$questions = 0;
-				$result=0;
-				$right_answers=0;
-				if ($t_data ['finished'] < date ( 'Y-m-d H:i', time ()) ){
-				    $result=0;
-				    $status = Training::FAILED;
-				}else{
-    				    $exam = new Exam ();
-				    $enum = $exam->enumerateResult ( $t_data ['id'] );
-				    
-				    foreach($enum as $key=>$e_data){
-					$questions++;
-					if ($e_data['result'] == 't'){
-					    $right_answers++;
+				$result = 0;
+				$right_answers = 0;
+				if ($t_data ['finished'] < date ( 'Y-m-d H:i', time () )) {
+					$result = 0;
+					$status = Training::FAILED;
+				} else {
+					$exam = new Exam ();
+					$enum = $exam->enumerateResult ( $t_data ['id'] );
+					
+					foreach ( $enum as $key => $e_data ) {
+						$questions ++;
+						if ($e_data ['result'] == 't') {
+							$right_answers ++;
+						}
 					}
-				    }
-				    if ($questions > 0) {
-					$result = intval( $right_answers * 100 / $questions);
+					if ($questions > 0) {
+						$result = intval ( $right_answers * 100 / $questions );
 					}
-				    if ($result >= self::MIN_RESULT_FOR_SUCCESS){
-					$status=Training::FINISHED;
-				    }else{
-					$status=Training::FAILED;
-				    }
+					if ($result >= self::MIN_RESULT_FOR_SUCCESS) {
+						$status = Training::FINISHED;
+					} else {
+						$status = Training::FAILED;
+					}
 				}
 				
-				$t_data ['tries'] = intval($t_data['tries']) + 1;
+				$t_data ['tries'] = intval ( $t_data ['tries'] ) + 1;
 				$training->update ( $t_data ['id'], array (
 						'status_id' => $status,
 						'result' => $result,
 						'answers' => $right_answers,
 						'questions' => $questions,
-						'finished' => date ( 'Y-m-d H:i', time ()) 
+						'finished' => date ( 'Y-m-d H:i', time () ) 
 				) );
 				break;
 			default :
@@ -97,12 +97,12 @@ class ResultPage extends AuthorizedPage {
 			}
 			$categories = $this->makeCategoryList ( $items, $category_id );
 		}
-		if ($t_data['status_id'] == Training::FINISHED){
-		    $result=$translator->Congratulations;
-		    $result_class="alert-success";
-		}else{
-		    $result=$translator->Sorry;
-		    $result_class="alert-danger";
+		if ($t_data ['status_id'] == Training::FINISHED) {
+			$result = $translator->Congratulations;
+			$result_class = "alert-success";
+		} else {
+			$result = $translator->Sorry;
+			$result_class = "alert-danger";
 		}
 		echo <<< EOF
 <div class="container-fluid">
@@ -119,22 +119,22 @@ class ResultPage extends AuthorizedPage {
 	    </tr>
 
 EOF;
-			$exam = new Exam ();
-			$enum = $exam->enumerateResult ( $t_data ['id'] );
-			$i = 1;
-			foreach($enum as $key=>$e_data){
-			    $answer=$e_data['result']=='t'?$translator->Right:$translator->Wrong;
-			    $class=$e_data['result']=='t'?"success":"danger";
-			    echo <<<EOF
+		$exam = new Exam ();
+		$enum = $exam->enumerateResult ( $t_data ['id'] );
+		$i = 1;
+		foreach ( $enum as $key => $e_data ) {
+			$answer = $e_data ['result'] == 't' ? $translator->Right : $translator->Wrong;
+			$class = $e_data ['result'] == 't' ? "success" : "danger";
+			echo <<<EOF
 	    <tr class="alert alert-{$class}" role="alert">
 		<td>$i</td>
 		<td>{$e_data[question]}</td>
 		<td >$answer</td>
 	    </tr>
 EOF;
-			    $i++;			    
-			}
-			echo <<< EOF
+			$i ++;
+		}
+		echo <<< EOF
 	</table>
     </div>
 </div> <!-- /container -->

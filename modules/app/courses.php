@@ -80,9 +80,21 @@ EOF;
 	function put_courses_list($category_id = 0) {
 		$translator = new Translator ();
 		$course = new Course ();
+		
 		foreach ( $this->courses [$category_id] as $key => $data ) {
+			switch ($data ['format_id']) {
+				case Course::ONLINE :
+					$img = "<span class=\"glyphicon glyphicon-headphones\"></span> ";
+					break;
+				case Course::WEBCAST :
+					$img = "<span class=\"glyphicon glyphicon-facetime-video\"></span> ";
+					break;
+				case Course::OFFLINE :
+					$img = "<span class=\"glyphicon glyphicon-blackboard\"></span> ";
+					break;
+			}
 			echo "                <li class=\"list-group-item list-group-item-info" . ($data ['active'] == 'f' ? ' not-active' : '') . "\" >
-		  <a href=\"/course/{$data[id]}\" >
+		  <a href=\"/course/{$data[id]}\" >$img
                   <span class=\"item-name\" id=\"$data[id]\">{$data[name]} </span></a>
                    <small class=\"text-muted\">(" . $course->formats [$data ['format_id']] . ' / ' . $course->languages [$data ['language']] . ")</small>" . NL;
 			echo "</li>" . NL;

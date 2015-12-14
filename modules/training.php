@@ -15,6 +15,7 @@ class Training extends GenericObject {
 	const EXAM_STARTED = 4; // exam was started
 	const FAILED = 5; // exam was failed
 	const FINISHED = 6; // not need exam or exam success
+	const TIMEOUT = 7; //exceed time limit
 	protected $tablename = 'trainings';
 	protected $checker = array (
 			'active' => 'activeCheck',
@@ -37,6 +38,7 @@ class Training extends GenericObject {
 		$query = "SELECT count(*) as cnt FROM {$this->tablename} " . "WHERE finish > 'now'".
 				" AND status_id != " . Training::DELETED . 
 				" AND status_id != " . Training::FAILED . 
+				" AND status_id != " . Training::TIMEOUT . 
 				" AND status_id != " . Training::FINISHED .  
 				" AND ( status_id = " . Training::EXAM . " OR finished IS NULL)" . 
 				" AND user_id=" . intval ( $user_id ) .
@@ -53,6 +55,7 @@ class Training extends GenericObject {
 		$query = "SELECT count(*) as cnt  FROM {$this->tablename} WHERE finish > 'now' ".
 			" AND status_id != " . Training::DELETED . 
 			" AND status_id != " . Training::FAILED . 
+			" AND status_id != " . Training::TIMEOUT . 
 			" AND status_id != " . Training::FINISHED . 
 			" AND active=true".
 			" AND user_id=" . intval ( $id );

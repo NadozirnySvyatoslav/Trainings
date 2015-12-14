@@ -291,6 +291,7 @@ EOF;
 	    <div class="form-group">
 		<span class="btn btn-default btn-file"><input type="file" name="file" value="file"> </span>
 		$download
+		<a href="/admin_manager/list/{$data[id]}">{$translator->File_Manager}</a>
 	    </div>
 
 	    <div class="row">

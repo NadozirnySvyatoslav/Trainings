@@ -11,7 +11,6 @@ include LC_PATH . '/plans.php';
  * @author Nadozirny_SV
  *        
  */
-
 class TrainingsPage extends AuthorizedPage {
 	function displayBody() {
 		parent::displayBody ();
@@ -114,7 +113,7 @@ EOF;
 		
 		$enum = $plan->enumerate ( $search, $offset, ITEMS_IN_PAGE );
 		if (is_object ( $enum )) {
-		    echo <<< EOF
+			echo <<< EOF
 {$pagination}
           <div class="table-responsive">
             <table class="table table-striped">
@@ -150,14 +149,13 @@ EOF;
                 </tr>" . NL;
 				$i ++;
 			}
-		echo <<< EOF
+			echo <<< EOF
 	    </table>
 	</div>
 
 EOF;
-		}else{
-		    echo $translator->No_trainings;
-
+		} else {
+			echo $translator->No_trainings;
 		}
 	}
 	function displayHeader() {

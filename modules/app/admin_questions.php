@@ -116,20 +116,20 @@ class AdminQuestionsPage extends AuthorizedPage {
     <ol id="question-list" index="question-list" start="$i">
 
 EOF;
-		
-		foreach ( $enum as $data ) {
-			$type = $question->types [$data ['type_id']];
-			$type = $translator->$type;
-			if (! $type)
-				$type = "<span class=\"alert-warning\">{$translator->No_text}</span>";
-			if (! $data ['data'])
-				$data ['data'] = "<span class=\"alert-warning\">{$translator->No_text}</span>";
-			if (! $data ['answer'])
-				$data ['answer'] = "<span class=\"alert-warning\">{$translator->No_text}</span>";
-			if (! $data ['count'])
-				$data ['count'] = "<span class=\"alert-warning\">{$translator->No_text}</span>";
-			
-			echo <<< EOF
+		if (is_object ( $enum ))
+			foreach ( $enum as $data ) {
+				$type = $question->types [$data ['type_id']];
+				$type = $translator->$type;
+				if (! $type)
+					$type = "<span class=\"alert-warning\">{$translator->No_text}</span>";
+				if (! $data ['data'])
+					$data ['data'] = "<span class=\"alert-warning\">{$translator->No_text}</span>";
+				if (! $data ['answer'])
+					$data ['answer'] = "<span class=\"alert-warning\">{$translator->No_text}</span>";
+				if (! $data ['count'])
+					$data ['count'] = "<span class=\"alert-warning\">{$translator->No_text}</span>";
+				
+				echo <<< EOF
 	<li class="question-item" item-id="{$data[id]}">
 	    <a href="#" class="btn btn-sm" data-toggle="edit" item-id="{$data[id]}" parent-id="{$this->id}">
 	    <span class="glyphicon glyphicon-pencil"></span></a>
@@ -141,7 +141,7 @@ EOF;
 	</li>
 
 EOF;
-		}
+			}
 		
 		echo <<< EOF
     </ol>

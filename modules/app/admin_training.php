@@ -217,22 +217,22 @@ EOF;
 			$enum = $training->enumerate ( array (
 					'plan_id' => $data ['id'] 
 			) );
-			if (is_object($enum))
-			foreach ( $enum as $val ) {
-				$u_data = $user->get ( array (
-						'id' => $val ['user_id'] 
-				) );
-				
-				$json = array (
-						'id' => $data ['id'],
-						'name' => $data ['name'],
-						'email' => $data ['email'],
-						'company' => $data ['company'],
-						'city' => $data ['city'] 
-				);
-				
-				$users .= "<tr id=\"row{$u_data[id]}\"><td>{$u_data[name]}</td><td>" . "{$u_data[email]}</td><td>{$u_data[company]} / {$u_data[city]}</td><td>" . "<a href=\"#\" onclick=\"return removeuser({$u_data[id]});\">" . '<span class="glyphicon glyphicon-trash"></span></a></td></tr>' . NL;
-			}
+			if (is_object ( $enum ))
+				foreach ( $enum as $val ) {
+					$u_data = $user->get ( array (
+							'id' => $val ['user_id'] 
+					) );
+					
+					$json = array (
+							'id' => $data ['id'],
+							'name' => $data ['name'],
+							'email' => $data ['email'],
+							'company' => $data ['company'],
+							'city' => $data ['city'] 
+					);
+					
+					$users .= "<tr id=\"row{$u_data[id]}\"><td>{$u_data[name]}</td><td>" . "{$u_data[email]}</td><td>{$u_data[company]} / {$u_data[city]}</td><td>" . "<a href=\"#\" onclick=\"return removeuser({$u_data[id]});\">" . '<span class="glyphicon glyphicon-trash"></span></a></td></tr>' . NL;
+				}
 			
 			echo <<< EOF
 <div class="form-group totop-relative">
