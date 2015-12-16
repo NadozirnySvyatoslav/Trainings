@@ -1,5 +1,6 @@
 <?php
 define ( Administration, 'Адміністрування' );
+define ( Editor, 'Редактор' );
 
 define ( MENU_PLANS, 'План Тренінгів' );
 define ( MENU_REQUESTS, 'Заявки' );

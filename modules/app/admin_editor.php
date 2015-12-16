@@ -8,18 +8,41 @@ class AdminEditorPage extends AuthorizedPage {
 	function init() {
 		$func = array_shift ( $this->param );
 		$this->id = array_shift ( $this->param );
-		
 		$this->path=implode('/', $this->param);
 			$root=$_SERVER['DOCUMENT_ROOT'].'/../files/courses/'.$this->id;
 			if ($this->path) $root.='/'.$this->path;
 			switch ($func) {
 				case 'save' :
+					Security::checkEditor($this->id);
 					//touch($root.'/'.$_POST['name']);
 					file_put_contents($root, $_POST['data']);
 					header ( 'Location: /admin_manager/list/'.$this->id );
 					exit ();
 					break;
 				case 'get_image':
+					$filename=basename($root);
+					if (preg_match('/pdf$/i',$filename))
+					    header("Content-type: application/pdf");
+					else if (preg_match('/jpe?g$/i',$filename))
+					    header("Content-type: image/jpeg");
+					else if (preg_match('/gif$/i',$filename))
+					    header("Content-type: image/gif");
+					else if (preg_match('/png$/i',$filename))
+					    header("Content-type: image/png");
+					else if (preg_match('/svg$/i',$filename))
+					    header("Content-type: image/svg+xml");
+					else if (preg_match('/mp4$/i',$filename))
+					    header("Content-type: video/mp4");
+					else if (preg_match('/wmv$/i',$filename))
+					    header("Content-type: video/x-ms-wmv");
+					else if (preg_match('/webm$/i',$filename))
+					    header("Content-type: video/webm");
+					else if (preg_match('/mov$/i',$filename))
+					    header("Content-type: video/quicktime");
+					else    
+					    header("Content-type: application/octet-stream");
+					    
+					header("Content-Disposition: inline; filename=\"$filename\"");
 					readfile($root);
 					exit;
 					break;
@@ -86,7 +109,12 @@ if (preg_match('/.*(jpe?g|png|gif|svg)$/i',$this->path))
 	$type="image";
 if (preg_match('/.*(txt|htm|html)$/i',$this->path))
 	$type="text";
-
+if (preg_match('/.*(swf|pdf)$/i',$this->path))
+	$type="embed";
+if (preg_match('/.*(mov|mp4|wmv|avi)$/i',$this->path))
+	$type="video";
+if (preg_match('/.*(mp3)$/i',$this->path))
+	$type="audio";
 	
 switch($type){	
 	case 'text':
@@ -110,6 +138,32 @@ EOF;
 		
 EOF;
 		break;
+
+	case 'video':
+		echo <<< EOF
+		<div class="embed-responsive embed-responsive-16by9">
+		  <video class="embed-responsive-item" controls>
+		  <source src="/admin_editor/get_image/{$this->id}/{$this->path}" ></source>
+		  </video>
+		</div>
+EOF;
+		break;
+	case 'audio':
+		echo <<< EOF
+		<div class="">
+		  <audio class="embed-responsive-item" controls>
+		  <source src="/admin_editor/get_image/{$this->id}/{$this->path}" >
+		  </audio>
+		</div>
+EOF;
+		break;
+	case 'embed':
+		echo <<< EOF
+		<div class="embed-responsive embed-responsive-16by9">
+		  <object data="/admin_editor/get_image/{$this->id}/{$this->path}" class="embed-responsive-item"></object>
+		</div>
+EOF;
+		break;
 }
 	}
 	function makeCategoryList(&$items, $category_id) {
@@ -120,6 +174,6 @@ EOF;
 	}	
 
 	function defaultRole() {
-		$this->role = User::EDITOR;
+		$this->role = User::EDITOR | User::EDITOR_SIMPLE;
 	}
 }

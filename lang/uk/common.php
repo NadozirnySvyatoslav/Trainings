@@ -56,3 +56,6 @@ define ( activate, 'Активувати' );
 define ( edit, 'Редагувати' );
 define ( del, 'Видалити' );
 define ( AreYouSure, 'Ви впевнені?' );
+define ( Search_result, 'Результати пошуку');
+define ( Go_to, 'Перейти');
+define (no_results, 'Немає результатів');

@@ -8,7 +8,7 @@ class AuthorizedPage extends Page {
 		parent::__construct ( $param );
 	}
 	function defaultRole() {
-		$this->role = User::ADMIN | User::EDITOR | User::USER;
+		$this->role = User::USER;
 	}
 	function displayFooter() {
 		echo <<< EOF
@@ -89,6 +89,23 @@ EOF;
 
 EOF;
 		}
+		if (($_SESSION ['role_id'] & (User::SUPERUSER | User::EDITOR_RO | User::EDITOR | User::EDITOR_SIMPLE)) > 0) {
+				
+			echo <<< EOF
+          <ul class="nav nav-sidebar">
+	    <li ><div>{$translator->Editor}</div></li>
+		
+EOF;
+			foreach ( $editor_menu as $title => $url ) {
+				$badge='';
+				echo "<li" . ($url == $_SERVER ['REDIRECT_URL'] ? ' class="active"' : '') . "><a href=\"$url\">$title" . $badge . "</a></li>\n";
+			}
+				
+			echo <<< EOF
+          </ul>
+		
+EOF;
+		}	
 		
 		echo <<< EOF
         </div>
@@ -128,9 +145,9 @@ EOF;
           </button>
         </div>
 	<div id="navbar" class="navbar-collapse collapse">
-	  <form class="navbar-form navbar-left" role="search" action="/search" method="post">
+	  <form class="navbar-form navbar-left" role="search" action="/search" method="get">
 	    <div class="form-group">
-        	<input type="text" class="form-control" placeholder="{$translator->Search}">
+        	<input type="text" class="form-control" placeholder="{$translator->Search}" name="search" required>
 		<button type="submit" class="btn btn-default">
 		    <span class="glyphicon glyphicon-search"></span> {$translator->Search_Button}
 		</button>

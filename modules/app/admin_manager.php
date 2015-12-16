@@ -11,6 +11,10 @@ class AdminManagerPage extends AuthorizedPage {
 		$path=implode('/', $this->param);
 			$root=$_SERVER['DOCUMENT_ROOT'].'/../files/courses/'.$this->id;
 			if ($path) $root.='/'.$path;
+			if ($_SERVER ['REQUEST_METHOD'] == 'POST') { 
+			    Security::checkEditor($this->id);
+			    if (!file_exists($root)) mkdir($root);
+			}
 			switch ($func) {
 				case 'add_file' :
 					touch($root.'/'.$_POST['name']);
@@ -34,6 +38,7 @@ class AdminManagerPage extends AuthorizedPage {
 					break;
 					
 				case 'delete' :
+					Security::checkEditor($this->id);
 					try {
 						
 						unlink( $root );
@@ -43,6 +48,7 @@ class AdminManagerPage extends AuthorizedPage {
 					exit ();
 					break;
 				case 'delete_dir' :
+					Security::checkEditor($this->id);
 					try {
 						
 						rmdir( $root );
@@ -121,13 +127,9 @@ EOF;
 			$filepath=substr($filename,strlen($rootpath)+1);
 			$filename=basename($filename);	
 			
-			echo "                <li class=\"list-group-item\" >
-			<a href=\"/admin_editor/view/{$this->id}/{$filepath}\" title=\"{$translator->edit}\" >
-			{$filename}</a> 
-			
-			" . NL;
 			if (is_dir($parent.'/'.$filename)){
 			echo "
+			<li class=\"list-group-item\" ><strong>{$filename}/</strong>
 			<a href=\"#\"  data-toggle=\"toggler\" parent-id=\"{$this->id}/{$filepath}\" title=\"{$translator->addfile}\" type=\"file\">
 			<span class=\"glyphicon glyphicon-file\"></span> </a>
 			<a href=\"#\"  data-toggle=\"imagetoggler\" parent-id=\"{$this->id}/{$filepath}\" title=\"{$translator->addpicture}\" >
@@ -143,7 +145,11 @@ EOF;
 			echo "</ul>
 					".NL;
 			}else{
-				echo "<a href=\"/admin_manager/delete/{$this->id}/{$filepath}\" title=\"{$translator->del}\"
+				echo "
+			<li class=\"list-group-item\" >
+			<a href=\"/admin_editor/view/{$this->id}/{$filepath}\" title=\"{$translator->edit}\" >
+			{$filename}</a>
+			<a href=\"/admin_manager/delete/{$this->id}/{$filepath}\" title=\"{$translator->del}\"
 			onClick=\"return confirm('{$translator->AreYouSure}');\">
 			<span class=\"glyphicon glyphicon-trash\"></span></a>".NL;
 			}
@@ -158,6 +164,6 @@ EOF;
 			return $category;
 	}
 	function defaultRole() {
-		$this->role = User::EDITOR;
+		$this->role = User::EDITOR | User::EDITOR_SIMPLE;
 	}
 }

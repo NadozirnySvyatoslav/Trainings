@@ -22,6 +22,8 @@ class AdminCoursePage extends AuthorizedPage {
 		$course->upload ( $id );
 	}
 	function save() {
+		$id = array_shift ( $this->param );
+		Security::checkEditor($id);
 		$translator = new Translator ();
 		$obj = new Course ();
 		try {
@@ -51,7 +53,6 @@ class AdminCoursePage extends AuthorizedPage {
 					$data [$key] = $_POST [$key];
 			}
 			$data ['updated'] = date ( 'Y-m-d H:i:s', time () );
-			$id = array_shift ( $this->param );
 			$obj->update ( $id, $data );
 			if (isset ( $_FILES ['file'] ))
 				$this->uploadFiles ( $id );
@@ -123,7 +124,6 @@ EOF;
       <p >{$translator->Error_Backadmincourses}</p>
 </div>
 <script type="text/javascript">
-//window.location.href='/admin_courses';
 </script>
 
 EOF;
@@ -188,8 +188,9 @@ EOF;
 			$need_approve = 'checked';
 		
 		$maxsize = ini_get ( 'post_max_size' );
-		if (file_exists ( __DIR__ . '/../../../files/courses/' . $id ))
-			$download = "<a href=\"/admin_course/download/{$data[id]}\" target=\"_blank\">{$translator->Download_Archive}</a>";
+		if (!isset($create) && file_exists ( __DIR__ . '/../../../files/courses/' . $id )){
+			$download = "<a href=\"/admin_course/download/{$data[id]}\" target=\"_blank\">{$translator->Download_Archive}</a>
+		<a href=\"/admin_manager/list/{$data[id]}\">{$translator->File_Manager}</a>";
 		
 		$question = new Question ();
 		$q_cnt = $question->getCount ( array (
@@ -200,6 +201,8 @@ EOF;
 			$q_cnt = "<span class=\"badge\">$q_cnt</span>";
 		} else {
 			$q_cnt = '';
+		}
+		$questions="<div><a href=\"/admin_questions/{$data[id]}\">{$translator->Questions_Link} $q_cnt</a></div>";
 		}
 		echo <<< EOF
 <div class="container">
@@ -280,7 +283,7 @@ EOF;
 	    </div>
 	    <div class="checkbox">
 		<label><input type="checkbox" value="true" name="exam" id="exam" $exam> {$translator->Exam}</label>
-		<div><a href="/admin_questions/{$data[id]}">{$translator->Questions_Link} $q_cnt</a></div>
+		 $questions
 	    </div>
 	    <div class="form-group">
 		<input type="number" name="exam_duration" id="exam_duration" class="form-control" min="1"
@@ -291,7 +294,6 @@ EOF;
 	    <div class="form-group">
 		<span class="btn btn-default btn-file"><input type="file" name="file" value="file"> </span>
 		$download
-		<a href="/admin_manager/list/{$data[id]}">{$translator->File_Manager}</a>
 	    </div>
 
 	    <div class="row">
@@ -319,6 +321,7 @@ EOF;
 				$this->edit ( true );
 				break;
 			case 'add' :
+				
 				$this->add ();
 				break;
 			case 'edit' :
@@ -326,9 +329,6 @@ EOF;
 				break;
 			case 'save' :
 				$this->save ();
-				break;
-			case 'delete' :
-				$this->delete ();
 				break;
 		}
 	}
@@ -341,6 +341,6 @@ EOF;
 		return $categories;
 	}
 	function defaultRole() {
-		$this->role = User::EDITOR;
+		$this->role = User::EDITOR | User::EDITOR_SIMPLE;
 	}
 }

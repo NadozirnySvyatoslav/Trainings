@@ -14,6 +14,7 @@ class AdminCoursesPage extends AuthorizedPage {
 			$_SERVER ['REQUEST_METHOD'] = 'POST';
 			switch ($func) {
 				case 'delete' :
+					Security::checkEditor($id);
 					try {
 						$obj->delete ( $id );
 					} catch ( Exception $e ) {
@@ -22,6 +23,7 @@ class AdminCoursesPage extends AuthorizedPage {
 					exit ();
 					break;
 				case 'activate' :
+					Security::checkEditor($id);
 					try {
 						$obj->invert ( $id );
 					} catch ( Exception $e ) {
@@ -110,6 +112,6 @@ EOF;
 		}
 	}
 	function defaultRole() {
-		$this->role = User::EDITOR;
+		$this->role = User::EDITOR | User::EDITOR_SIMPLE;
 	}
 }

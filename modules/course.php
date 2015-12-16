@@ -29,7 +29,8 @@ class Course extends GenericObject {
 	protected $tablename = 'courses';
 	protected $checker = array (
 			'active' => 'activeCheck',
-			'category_id' => 'categoryCheck' 
+			'category_id' => 'categoryCheck', 
+			'search' => 'search'
 	);
 	function add($data) {
 		if (! isset ( $data ['name'] ) || ! isset ( $data ['category_id'] ) || ! isset ( $data ['format_id'] ) || ! isset ( $data ['language'] ) || ! isset ( $data ['describe'] )) {
@@ -45,6 +46,7 @@ class Course extends GenericObject {
 		if ($db->valid ())
 			throw new Exception ( "Course exists", self::EXISTS );
 		$data ['created'] = date ( 'Y-m-d H:i:s', time () );
+		$data ['author_id'] = $_SESSION ['user_id'];
 		return parent::add ( $data );
 	}
 	function invert($id) {
@@ -119,7 +121,11 @@ class Course extends GenericObject {
 			return true;
 		}
 	}
-	function activeCheck($val) {
+function search($val) {
+		return   " (courses.name like '%" . pg_escape_string ( $val ) . "%' ".
+				"OR courses.describe like '%" . pg_escape_string ( $val ) . "%') ";
+	}
+function activeCheck($val) {
 		return 'active = ' . ($val ? 'true' : 'false');
 	}
 	function categoryCheck($val) {

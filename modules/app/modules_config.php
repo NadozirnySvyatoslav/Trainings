@@ -23,6 +23,7 @@ $pages = array (
 		'learn' => 'LearnPage',
 		'exam' => 'ExamPage',
 		'result' => 'ResultPage',
+		'search' => 'SearchPage',
 		'admin_trainings' => 'AdminPlansPage',
 		'admin_training' => 'AdminPlanPage',
 		'admin_manager' => 'AdminManagerPage',

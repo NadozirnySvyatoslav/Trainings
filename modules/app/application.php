@@ -23,8 +23,13 @@ class Application {
 			require __DIR__ . '/' . $modname . '.php';
 			include __DIR__ . '/modules_config.php';
 			if (class_exists ( $pages [$modname] )) {
-				$page = new $pages [$modname] ( $param );
-				$page->display ();
+				try{
+				    $page = new $pages [$modname] ( $param );
+				    $page->display ();
+				}catch(NoAccessException $e){
+				    header ( "Location: /403/" . $modname );
+				    echo "No access to ".$_SESSION['user_name'];
+				}
 			} else
 				header ( "Location: /500/" . $modname );
 		} else
@@ -36,7 +41,7 @@ class Application {
 	 * if no module found, redirect to default pages
 	 */
 	function setModule() {
-		$url = preg_match_all ( '/\/([A-Za-z_0-9\%\.\-\p{L}]*)/u', $_SERVER ['REDIRECT_URL'], $list );
+		$url = preg_match_all ( '/\/([A-Za-z_0-9\%\.\ \-\p{L}]*)/u', $_SERVER ['REDIRECT_URL'], $list );
 		$param = $list [1];
 		if (isset ( $param ))
 			$modname = array_shift ( $param );

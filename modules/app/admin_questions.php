@@ -12,9 +12,11 @@ class AdminQuestionsPage extends AuthorizedPage {
 			$this->id = $func;
 		} else if ($func != '') {
 			$_SERVER ['REQUEST_METHOD'] = 'POST';
+			$course_id = array_shift ( $this->param );
+			Security::checkEditor($course_id);
 			switch ($func) {
 				case 'save' :
-					$data ['course_id'] = array_shift ( $this->param );
+					$data ['course_id'] = $course_id;
 					$data ['type_id'] = $_POST ['type_id'];
 					$data ['data'] = $_POST ['data'];
 					$data ['count'] = $_POST ['count'];
@@ -29,7 +31,6 @@ class AdminQuestionsPage extends AuthorizedPage {
 					break;
 				case 'delete' :
 					try {
-						$course_id = array_shift ( $this->param );
 						$question_id = array_shift ( $this->param );
 						$question->delete ( $question_id );
 						echo "ok";
@@ -41,7 +42,6 @@ class AdminQuestionsPage extends AuthorizedPage {
 					break;
 				case 'find' :
 					try {
-						$course_id = array_shift ( $this->param );
 						$data = array (
 								'course_id' => $course_id,
 								'type_id' => 0,
@@ -58,7 +58,6 @@ class AdminQuestionsPage extends AuthorizedPage {
 					break;
 				case 'load' :
 					try {
-						$course_id = array_shift ( $this->param );
 						$question_id = array_shift ( $this->param );
 						$data = $question->get ( array (
 								'course_id' => $course_id,
@@ -237,6 +236,6 @@ $(function() {
 EOF;
 	}
 	function defaultRole() {
-		$this->role = User::EDITOR;
+		$this->role = User::EDITOR | User::EDITOR_SIMPLE;
 	}
 }
