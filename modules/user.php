@@ -1,6 +1,7 @@
 <?php
 include_once __DIR__ . '/generic_object.php';
 include_once __DIR__ . '/db/DB.php';
+include_once __DIR__ . '/translator.php'; 
 /**
  * @author Nadozirny_SV
  *
@@ -103,22 +104,23 @@ class User extends GenericObject {
 	 * @return string
 	 */
 	function RolesAsString($roles) {
+		$translator = new Translator();
 		if (($roles & self::SUPERUSER) > 0)
-			return "Superuser";
+			return $translator->Superuser;
 		if (intval ( $roles ) == 0)
-			return "Guest";
+			return $translator->Guest;
 		if (($roles & self::ADMIN) > 0)
-			$res = "Admin";
+			$res = $translator->Admin;
 		if (($roles & self::ADMIN_RO) > 0)
-			$res = "Read only Admin";
+			$res = $translator->Admin_ro;
 		if (($roles & self::EDITOR) > 0)
-			$res .= ($res == '' ? '' : ', ') . "Editor";
+			$res .= ($res == '' ? '' : ', ') . $translator->Editor;
 		if (($roles & self::EDITOR_RO) > 0)
-			$res .= ($res == '' ? '' : ', ') . "Read only Editor";
+			$res .= ($res == '' ? '' : ', ') . $translator->Editor_ro;
 		if (($roles & self::EDITOR_SIMPLE) > 0)
-			$res .= ($res == '' ? '' : ', ') . "Own Editor";
+			$res .= ($res == '' ? '' : ', ') . $translator->Editor_limited;
 		if (($roles & self::USER) > 0)
-			$res .= ($res == '' ? '' : ', ') . "User";
+			$res .= ($res == '' ? '' : ', ') . $translator->User;
 		return $res;
 	}
 }

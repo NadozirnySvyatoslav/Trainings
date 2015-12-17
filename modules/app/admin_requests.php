@@ -183,23 +183,17 @@ EOF;
               <tbody>
 
 EOF;
-		$enum = $category->enumerate ();
-		if ($enum) {
-			foreach ( $enum as $key => $val ) {
-				if ($val ['id'] != 0)
-					$items [$val ['id']] = $val;
-			}
-		}
+		
 		$enum = $request->enumerate ( $search, $offset, ITEMS_IN_PAGE );
 		if (is_object ( $enum )) {
 			$i = 1 + $offset;
 			foreach ( $enum as $key => $data ) {
 				
-				$categories = $this->makeCategoryList ( $items, $data ['category_id'] );
+				
 				
 				echo "                <tr>
                   <td>{$i}</td>
-                  <td>" . ($data ['active'] == 'f' ? '<del>' : '') . "<p class=\"text-muted\">{$categories}</p>
+                  <td>" . ($data ['active'] == 'f' ? '<del>' : '') . "<p class=\"text-muted\">{$data[category_name]}</p>
 			<a href=\"/course/{$data[course_id]}\" target=\"_blank\">{$data[course_name]}</a></td>
                   <td><a href=\"/admin_user/edit/{$data[user_id]}\" target=\"_blank\">{$data[user_name]}</a>
 			<p>$data[user_company] <small>$data[user_position]</small></p></td>
@@ -218,12 +212,7 @@ EOF;
 
 EOF;
 	}
-	function makeCategoryList(&$items, $category_id) {
-		$category = $items [$category_id] ['name'];
-		if ($items [$category_id] ['parent_id'] != 0)
-			$category = $this->makeCategoryList ( &$items, $items [$category_id] ['parent_id'] ) . "<span class=\"glyphicon glyphicon-menu-right\"></span>" . $category;
-		return $category;
-	}
+
 	function makeFilterCategoryList(&$items, $id, $category_id, $space = '') {
 		foreach ( $items [$id] as $key => $val ) {
 			$categories .= "<option value=\"$val[id]\"" . ($val ['id'] == $category_id ? ' selected' : '') . ">" . $space . htmlspecialchars ( $val ['name'], ENT_QUOTES ) . "</option>" . NL;

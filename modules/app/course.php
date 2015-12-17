@@ -2,7 +2,6 @@
 include_once __DIR__ . '/authorizedpage.php';
 include_once __DIR__ . '/../translator.php';
 include_once __DIR__ . '/../course.php';
-include_once __DIR__ . '/../category.php';
 include_once __DIR__ . '/../training.php';
 include_once __DIR__ . '/../sendmail.php';
 include LC_PATH . '/courses.php';
@@ -12,7 +11,6 @@ class CoursePage extends AuthorizedPage {
 		
 		$translator = new Translator ();
 		$course = new Course ();
-		$category = new Category ();
 		$training = new Training ();
 		$id = array_shift ( $this->param );
 		try {
@@ -25,17 +23,7 @@ class CoursePage extends AuthorizedPage {
 		foreach ( $data as $key => $val ) {
 			$data [$key] = htmlspecialchars ( $val, ENT_QUOTES );
 		}
-		$category_id = $data ['category_id'];
-		;
 		
-		$enum = $category->enumerate ( null );
-		if ($enum) {
-			foreach ( $enum as $key => $val ) {
-				if ($val ['id'] != 0)
-					$items [$val ['id']] = $val;
-			}
-			$categories = $this->makeCategoryList ( $items, $category_id );
-		}
 		foreach ( $course->formats as $key => $val ) {
 			if ($key == $data ['format_id'])
 				$format = htmlspecialchars ( $val, ENT_QUOTES );
@@ -61,7 +49,7 @@ class CoursePage extends AuthorizedPage {
 		echo <<< EOF
 <div class="container-fluid">
 <div class="col-md-10 col-lg-8 col-lg-offset-2 ">
-	<h4>$categories</h4>
+	<h4>{$data[category_name]}</h4>
 	<h2>{$data[name]}</h2>
 	<div class="row">
 	    <div class="col-sm-6"><small>{$translator->Duration}: {$duration}</small></div>
@@ -96,12 +84,7 @@ class CoursePage extends AuthorizedPage {
 
 EOF;
 	}
-	function makeCategoryList(&$items, $category_id) {
-		$category = $items [$category_id] ['name'];
-		if ($items [$category_id] ['parent_id'] != 0)
-			$category = $this->makeCategoryList ( &$items, $items [$category_id] ['parent_id'] ) . "<span class=\"glyphicon glyphicon-menu-right\"></span>" . $category;
-		return $category;
-	}
+	
 	function defaultRole() {
 		$this->role = User::USER;
 	}

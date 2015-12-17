@@ -2,7 +2,6 @@
 require __DIR__ . '/authorizedpage.php';
 include_once __DIR__ . '/../translator.php';
 include_once __DIR__ . '/../training.php';
-include_once __DIR__ . '/../category.php';
 include_once __DIR__ . '/../course.php';
 include LC_PATH . '/mycourses.php';
 include LC_PATH . '/common.php';
@@ -31,21 +30,12 @@ class MyCoursesPage extends AuthorizedPage {
 
 EOF;
 		
-		$category = new Category ();
-		$enum = $category->enumerate ( null );
-		if ($enum) {
-			foreach ( $enum as $key => $val ) {
-				if ($val ['id'] != 0)
-					$items [$val ['id']] = $val;
-			}
-		}
 		$enum = $training->enumerate ( array (
 				'user_id' => $_SESSION ['user_id'],
 				'active' => 'true' 
 		) );
 		if ($enum) {
 			foreach ( $enum as $key => $data ) {
-				$categories = $this->makeCategoryList ( $items, $data ['category_id'] );
 				$now = new DateTime ( 'now' );
 				$finish = new DateTime ( $data ['finish'] );
 				// check for timeout and set new status
@@ -127,10 +117,11 @@ EOF;
 					$finish = $data ['finished'];
 				else
 					$finish = $data ['finish'];
+				
 				echo <<<EOF
 <div class="panel panel-default col-md-6 col-lg-4 mycourse">
     <div class="panel-heading overflow-hidden">
-	<p class="text-muted">$categories</p>
+	<p class="text-muted">{$data[category_name]}</p>
 	<h4><a href="/course/{$data[course_id]}">{$data[course_name]}</a></h4>
     </div>
     <div class="panel-body">
@@ -222,10 +213,5 @@ EOF;
 			exit ();
 		}
 	}
-	function makeCategoryList(&$items, $category_id) {
-		$category = $items [$category_id] ['name'];
-		if ($items [$category_id] ['parent_id'] != 0)
-			$category = $this->makeCategoryList ( &$items, $items [$category_id] ['parent_id'] ) . "<span class=\"glyphicon glyphicon-menu-right\"></span>" . $category;
-		return $category;
-	}
+
 }

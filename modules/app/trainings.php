@@ -37,19 +37,7 @@ class TrainingsPage extends AuthorizedPage {
 			}
 		}
 		
-		$category = new Category ();
-		$enum = $category->enumerate ( null );
-		if ($enum) {
-			foreach ( $enum as $key => $val ) {
-				if ($val ['id'] != 0)
-					$items [$val ['parent_id']] [] = $val;
-			}
-			foreach ( $items as $key => $val ) {
-				asort ( $items [$key] );
-			}
-			asort ( $items );
-			$categories = '<option></option>' . $this->makeFilterCategoryList ( $items, 0, $category_id );
-		}
+		$categories=Course::getCategoriesForSelect(0);
 		
 		if ($cnt > ITEMS_IN_PAGE)
 			$pagination = $this->addPaginator ( $cnt, $page );
@@ -101,13 +89,7 @@ class TrainingsPage extends AuthorizedPage {
     </div> -->
 
 EOF;
-		$enum = $category->enumerate ( null );
-		if ($enum) {
-			foreach ( $enum as $key => $val ) {
-				if ($val ['id'] != 0)
-					$items [$val ['id']] = $val;
-			}
-		}
+		
 		$course = new Course ();
 		$training = new Training ();
 		
@@ -137,11 +119,10 @@ EOF;
 				$participants = $training->getCount ( array (
 						'plan_id' => $data ['id'] 
 				) );
-				$categories = $this->makeCategoryList ( $items, $c_data ['category_id'] );
 				
 				echo "                <tr>
                   <td>{$i}</td>
-                  <td>" . ($data ['active'] == 'f' ? '<del>' : '') . "<p class=\"text-muted\">{$categories}</p>
+                  <td>" . ($data ['active'] == 'f' ? '<del>' : '') . "<p class=\"text-muted\">{$data[category_name]}</p>
 			<a href=\"/course/{$c_data[id]}\">{$c_data[name]}</a></td>
                   <td>{$data[start]}</td>
                   <td>{$data[finish]}</td>
@@ -183,20 +164,6 @@ $(function() {
 </script>
 
 EOF;
-	}
-	function makeCategoryList(&$items, $category_id) {
-		$category = $items [$category_id] ['name'];
-		if ($items [$category_id] ['parent_id'] != 0)
-			$category = $this->makeCategoryList ( &$items, $items [$category_id] ['parent_id'] ) . "<span class=\"glyphicon glyphicon-menu-right\"></span>" . $category;
-		return $category;
-	}
-	function makeFilterCategoryList(&$items, $id, $category_id, $space = '') {
-		foreach ( $items [$id] as $key => $val ) {
-			$categories .= "<option value=\"$val[id]\"" . ($val ['id'] == $category_id ? ' selected' : '') . ">" . $space . htmlspecialchars ( $val ['name'], ENT_QUOTES ) . "</option>" . NL;
-			if (isset ( $items [$val ['id']] ))
-				$categories .= $this->makeFilterCategoryList ( $items, $val ['id'], $category_id, $space . '&nbsp;&nbsp;&nbsp;' );
-		}
-		return $categories;
 	}
 	function defaultRole() {
 		$this->role = User::USER;

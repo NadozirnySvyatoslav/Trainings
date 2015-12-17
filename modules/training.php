@@ -87,6 +87,7 @@ INNER JOIN users ON users.id={$this->tablename}.user_id";
     trainings.course_id as course_id,
     courses.name as course_name,
     courses.category_id as category_id,
+    courses.category_name as category_name,
     courses.format_id as format_id,
     trainings.user_id as user_id,
     trainings.created as created,

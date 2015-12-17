@@ -1,9 +1,8 @@
 <?php
 include_once __DIR__ . '/authorizedpage.php';
 include_once __DIR__ . '/../translator.php';
-include_once __DIR__ . '/../category.php';
 include LC_PATH . '/common.php';
-include LC_PATH . '/categories.php';
+
 class AdminManagerPage extends AuthorizedPage {
 	function init() {
 		$func = array_shift ( $this->param );
@@ -76,27 +75,16 @@ EOF;
 		parent::displayBody ();
 		$translator = new Translator ();
 		$course = new Course ();
-		$category = new Category ();
 		$data = $course->get ( array (
 				'id' => $this->id
 		) );
 		foreach ( $data as $key => $val ) {
 			$data [$key] = htmlspecialchars ( $val, ENT_QUOTES );
 		}
-		$category_id = $data ['category_id'];
-		;
 		
-		$enum = $category->enumerate ( null );
-		if ($enum) {
-			foreach ( $enum as $key => $val ) {
-				if ($val ['id'] != 0)
-					$items [$val ['id']] = $val;
-			}
-			$categories = $this->makeCategoryList ( $items, $category_id );
-		}
 		echo <<< EOF
 <h2  class="page-header">{$data[name]}</h2>
-<h4>$categories</h4>
+<h4>{$data[category_name]}</h4>
 <div class="col-lg-8">
     <ul class="list-group category-list" index="{$this->id}/">
 

@@ -143,7 +143,7 @@ EOF;
 
 	    <div class="form-group">
 		<label>{$translator->Interface_lan}: </label>
-		<select id="interface" name="interface" class="scrollMe" title="" data-size="3">
+		<select id="interface" name="interface" class="scrollMe" title="" data-size="3" tabindex="11">
 		<option value="uk">Українська</option>
 		<option value="ru">Русский</option>
 		<option value="en">English</option>

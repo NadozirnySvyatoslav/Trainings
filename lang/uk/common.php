@@ -4,7 +4,7 @@ define ( Search_Button, 'Пошук' );
 define ( Filter, 'Фільтр' );
 define ( Apply, 'Застосувати' );
 define ( Cancel, 'Відмінити' );
-
+define ( Save, 'Зберегти');
 define ( Error_404_Header, 'Помилка! Сторінка не знайдена.' );
 define ( Error_404_Desc, 'Сталась помилка при переході на сторінку. 
 Спробуйте оновити попередню сторінку. 
@@ -59,3 +59,5 @@ define ( AreYouSure, 'Ви впевнені?' );
 define ( Search_result, 'Результати пошуку');
 define ( Go_to, 'Перейти');
 define (no_results, 'Немає результатів');
+define ( Help, 'Допомога');
+define ( Help_desc, 'документація по користуванню системою');

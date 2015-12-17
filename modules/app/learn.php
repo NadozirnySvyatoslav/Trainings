@@ -2,7 +2,6 @@
 include_once __DIR__ . '/authorizedpage.php';
 include_once __DIR__ . '/../translator.php';
 include_once __DIR__ . '/../course.php';
-include_once __DIR__ . '/../category.php';
 include_once __DIR__ . '/../training.php';
 include_once __DIR__ . '/../sendmail.php';
 include LC_PATH . '/learn.php';
@@ -85,7 +84,6 @@ EOF;
 		
 		$translator = new Translator ();
 		$course = new Course ();
-		$category = new Category ();
 		$training = new Training ();
 		$t_data = $training->get ( array (
 				'course_hash' => $this->course_hash,
@@ -98,24 +96,13 @@ EOF;
 		foreach ( $c_data as $key => $val ) {
 			$c_data [$key] = htmlspecialchars ( $val, ENT_QUOTES );
 		}
-		$category_id = $c_data ['category_id'];
-		;
-		
-		$enum = $category->enumerate ( null, 0, 1000000 );
-		if ($enum) {
-			foreach ( $enum as $key => $val ) {
-				if ($val ['id'] != 0)
-					$items [$val ['id']] = $val;
-			}
-			$categories = $this->makeCategoryList ( $items, $category_id );
-		}
 		
 		echo <<< EOF
 <div class="container-fluid">
 <div class="col-lg-10 col-lg-offset-1" id="window">
 	<div class="row" >
 	<div class="col-xs-10">
-	    <h4>$categories</h4>
+	    <h4>{$c_data[category_name]}</h4>
 	    <h2>{$c_data[name]}</h2>
 	</div>
 	<div class="col-xs-2 text-right" id="top_buttons">
@@ -138,12 +125,6 @@ EOF;
 </div> <!-- /container -->
 
 EOF;
-	}
-	function makeCategoryList(&$items, $category_id) {
-		$category = $items [$category_id] ['name'];
-		if ($items [$category_id] ['parent_id'] != 0)
-			$category = $this->makeCategoryList ( &$items, $items [$category_id] ['parent_id'] ) . "<span class=\"glyphicon glyphicon-menu-right\"></span>" . $category;
-		return $category;
 	}
 	function defaultRole() {
 		$this->role = User::USER;

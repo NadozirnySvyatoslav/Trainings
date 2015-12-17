@@ -1,5 +1,5 @@
 <?php
-error_reporting(0);
+error_reporting(E_ERROR);
 
 require __DIR__ . '/config.php';
 require __DIR__ . '/modules/app/application.php';

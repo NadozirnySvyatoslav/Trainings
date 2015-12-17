@@ -4,7 +4,6 @@ include_once __DIR__ . '/../translator.php';
 include_once __DIR__ . '/../course.php';
 include_once __DIR__ . '/../category.php';
 include_once __DIR__ . '/../training.php';
-include_once __DIR__ . '/../sendmail.php';
 include LC_PATH . '/courses.php';
 class SearchPage extends AuthorizedPage {
 	function displayBody() {
@@ -38,6 +37,7 @@ $enum=$course->enumerate(array('search' => $search),$offset, ITEMS_IN_PAGE);
 foreach($enum as $data){
 	echo <<< EOF
 		<h4>{$data[name]}</h4>
+		<h6>{$data[category_name]}</h6>
 		<p>{$data[describe]}</p>
 		<p><a href="/course/{$data[id]}">{$translator->Go_to}...</a></p>
 EOF;

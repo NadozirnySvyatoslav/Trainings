@@ -1,5 +1,6 @@
 <?php
 include_once __DIR__ . '/generic_object.php';
+include_once __DIR__ . '/category.php';
 include_once __DIR__ . '/db/DB.php';
 class Course extends GenericObject {
 	// ERROR CODES
@@ -47,6 +48,7 @@ class Course extends GenericObject {
 			throw new Exception ( "Course exists", self::EXISTS );
 		$data ['created'] = date ( 'Y-m-d H:i:s', time () );
 		$data ['author_id'] = $_SESSION ['user_id'];
+		$data ['category_name'] = $this->getCategoryName($data ['category_id']);
 		return parent::add ( $data );
 	}
 	function invert($id) {
@@ -121,14 +123,57 @@ class Course extends GenericObject {
 			return true;
 		}
 	}
-function search($val) {
-		return   " (courses.name like '%" . pg_escape_string ( $val ) . "%' ".
-				"OR courses.describe like '%" . pg_escape_string ( $val ) . "%') ";
-	}
-function activeCheck($val) {
-		return 'active = ' . ($val ? 'true' : 'false');
-	}
+	function search($val) {
+			return   " (courses.name ILIKE '%" . pg_escape_string ( $val ) . "%' ".
+					"OR courses.describe ILIKE '%" . pg_escape_string ( $val ) . "%' ".
+					"OR courses.category_name ILIKE '%" . pg_escape_string ( $val ) . "%') ";
+		}
+	function activeCheck($val) {
+			return 'active = ' . ($val ? 'true' : 'false');
+		}
 	function categoryCheck($val) {
 		return 'category_id = ' . intval ( $val );
 	}
+	function getCategoryName($category_id=''){
+		$category = new Category ();
+		$enum = $category->enumerate ( null );
+		if ($enum) {
+			foreach ( $enum as $key => $val ) {
+				if ($val ['id'] != 0)
+					$items [$val ['id']] = $val;
+			}
+			$categories = $this->makeCategoryList ( $items, $category_id );
+		}
+		return $categories;
+	}
+	function makeCategoryList(&$items, $category_id) {
+		$category = $items [$category_id] ['name'];
+		if ($items [$category_id] ['parent_id'] != 0)
+			$category = $this->makeCategoryList ( &$items, $items [$category_id] ['parent_id'] ) . " > " . $category;
+		return $category;
+	}
+	function getCategoriesForSelect($category_id){
+		$category = new Category ();
+		$enum = $category->enumerate ( null );
+		if ($enum) {
+			foreach ( $enum as $key => $val ) {
+				if ($val ['id'] != 0)
+					$items [$val ['parent_id']] [] = $val;
+			}
+			foreach ( $items as $key => $val ) {
+				asort ( $items [$key] );
+			}
+			asort ( $items );
+			$categories = '<option></option>' . Course::makeFilterCategoryList ( $items, 0, $category_id );
+		}
+		return $categories;
+	}
+	function makeFilterCategoryList(&$items, $id, $category_id, $space = '') {
+		foreach ( $items [$id] as $key => $val ) {
+			$categories .= "<option value=\"$val[id]\"" . ($val ['id'] == $category_id ? ' selected' : '') . ">" . $space . htmlspecialchars ( $val ['name'], ENT_QUOTES ) . "</option>" . NL;
+			if (isset ( $items [$val ['id']] ))
+				$categories .= Course::makeFilterCategoryList ( $items, $val ['id'], $category_id, $space . '&nbsp;&nbsp;&nbsp;' );
+		}
+		return $categories;
+	}	
 }

@@ -135,7 +135,7 @@ EOF;
 
 EOF;
 		
-		$enum = $user->enumerate ( $search, $offset, ITEMS_IN_PAGE );
+		$enum = $user->enumerate ( $search, $offset, ITEMS_IN_PAGE , 'users.last_name,users.first_name');
 		if (is_object ( $enum )) {
 			$i = 1 + $offset;
 			foreach ( $enum as $key => $data ) {

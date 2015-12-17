@@ -62,7 +62,7 @@ EOF;
           </ul>
 
 EOF;
-		if (($_SESSION ['role_id'] & (User::SUPERUSER | User::ADMIN | User::ADMIN_RO | User::EDITOR)) > 0) {
+		if (($_SESSION ['role_id'] & (User::SUPERUSER | User::ADMIN | User::ADMIN_RO)) > 0) {
 			include_once __DIR__ . '/../request.php';
 			$request = new Request ();
 			$r_cnt = $request->getCount ( array (
@@ -127,38 +127,34 @@ EOF;
 		parent::displayBody ();
 		$translator = new Translator ();
 		echo <<< EOF
-<nav class="navbar navbar-fixed navbar-inverse ">
+<nav class="navbar navbar-fixed  navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
-         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+         <button type="button" class="navbar-toggle collapsed btn btn-default" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
+            <span class="glyphicon glyphicon-menu-hamburger"></span>
           </button>
           <a class="navbar-brand" href="/"><img id="logo" src="http://renome-smart.com/assets/images/Home/Logo-UA.png"></a>
-         <button type="button" class="navbar-toggle navbar-left collapsed" data-toggle="collapse" data-target="#dashboard" aria-expanded="false" aria-controls="navbar">
+         <button type="button" class="navbar-toggle collapsed btn btn-default" data-toggle="collapse" data-target="#dashboard" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle Dashboard</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
+            <span class="glyphicon glyphicon-th-list"></span>
           </button>
         </div>
 	<div id="navbar" class="navbar-collapse collapse">
 	  <form class="navbar-form navbar-left" role="search" action="/search" method="get">
-	    <div class="form-group">
+	    <div class="input-group">
         	<input type="text" class="form-control" placeholder="{$translator->Search}" name="search" required>
-		<button type="submit" class="btn btn-default">
-		    <span class="glyphicon glyphicon-search"></span> {$translator->Search_Button}
-		</button>
+			<span class="input-group-btn">
+				<button type="submit" class="btn btn-default">
+		    		<span class="glyphicon glyphicon-search"></span> {$translator->Search_Button}
+				</button>
+			</span>	
 	    </div>
           </form>
 	    <ul class="nav navbar-nav navbar-right">
-        	<li><a id="flag_ua" href="/setlanguage/uk" title="Українська">&nbsp;&nbsp;&nbsp;</a>
-        	<li><a id="flag_ru" href="/setlanguage/ru" title="Русский">&nbsp;&nbsp;&nbsp;</a>
-        	<li><a id="flag_en" href="/setlanguage/en" title="English">&nbsp;&nbsp;&nbsp;</a>
-    		<li><a href="/profile" >{$_SESSION[user]}</a>
-		<li><a href="/logout" >{$translator->Logout}</a>
+        	<li><a href="/help">{$translator->Help}</a></li>
+    		<li><a href="/profile" >{$_SESSION[user]}</a></li>
+			<li><a href="/logout" >{$translator->Logout}</a></li>
 	    </ul>
         </div>
     </div>

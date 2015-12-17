@@ -1,9 +1,8 @@
 <?php
 include_once __DIR__ . '/authorizedpage.php';
 include_once __DIR__ . '/../translator.php';
-include_once __DIR__ . '/../category.php';
 include LC_PATH . '/common.php';
-include LC_PATH . '/categories.php';
+
 class AdminEditorPage extends AuthorizedPage {
 	function init() {
 		$func = array_shift ( $this->param );
@@ -76,27 +75,15 @@ EOF;
 		parent::displayBody ();
 		$translator = new Translator ();
 		$course = new Course ();
-		$category = new Category ();
 		$data = $course->get ( array (
 				'id' => $this->id
 		) );
 		foreach ( $data as $key => $val ) {
 			$data [$key] = htmlspecialchars ( $val, ENT_QUOTES );
 		}
-		$category_id = $data ['category_id'];
-		;
-		
-		$enum = $category->enumerate ( null );
-		if ($enum) {
-			foreach ( $enum as $key => $val ) {
-				if ($val ['id'] != 0)
-					$items [$val ['id']] = $val;
-			}
-			$categories = $this->makeCategoryList ( $items, $category_id );
-		}
 		$path=preg_replace('/\//','</li><li>',$this->path);
 		echo <<< EOF
-<h4>$categories</h4>
+<h4>{$data[category_name]}</h4>
 <h2  class="page-header">{$data[name]}</h2>
 <ol class="breadcrumb">
 	<li><a href="/admin_manager/list/{$this->id}"><span class="glyphicon glyphicon-home"></span> {$translator->Back}</a>
@@ -166,13 +153,6 @@ EOF;
 		break;
 }
 	}
-	function makeCategoryList(&$items, $category_id) {
-		$category = $items [$category_id] ['name'];
-		if ($items [$category_id] ['parent_id'] != 0)
-			$category = $this->makeCategoryList ( &$items, $items [$category_id] ['parent_id'] ) . "<span class=\"glyphicon glyphicon-menu-right\"></span>" . $category;
-			return $category;
-	}	
-
 	function defaultRole() {
 		$this->role = User::EDITOR | User::EDITOR_SIMPLE;
 	}

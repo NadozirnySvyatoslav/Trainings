@@ -24,6 +24,7 @@ $pages = array (
 		'exam' => 'ExamPage',
 		'result' => 'ResultPage',
 		'search' => 'SearchPage',
+		'help' => 'HelpPage',
 		'admin_trainings' => 'AdminPlansPage',
 		'admin_training' => 'AdminPlanPage',
 		'admin_manager' => 'AdminManagerPage',

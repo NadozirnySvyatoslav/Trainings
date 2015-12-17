@@ -2,7 +2,6 @@
 include_once __DIR__ . '/authorizedpage.php';
 include_once __DIR__ . '/../translator.php';
 include_once __DIR__ . '/../plan.php';
-include_once __DIR__ . '/../category.php';
 include_once __DIR__ . '/../course.php';
 include_once __DIR__ . '/../user.php';
 include_once __DIR__ . '/../training.php';
@@ -144,18 +143,7 @@ EOF;
 		} catch ( Exception $e ) {
 		}
 		
-		$enum = $category->enumerate ();
-		if ($enum) {
-			foreach ( $enum as $key => $val ) {
-				if ($val ['id'] != 0)
-					$items [$val ['parent_id']] [] = $val;
-			}
-			foreach ( $items as $key => $val ) {
-				asort ( $items [$key] );
-			}
-			asort ( $items );
-			$categories = $this->makeCategoryList ( $items, 0, $category_id );
-		}
+		$categories=Course::getCategoriesForSelect($category_id);
 		
 		$enum = $trainer->enumerate ();
 		foreach ( $enum as $val ) {
@@ -432,14 +420,7 @@ function adduser(id){
 
 EOF;
 	}
-	function makeCategoryList(&$items, $id, $category_id, $space = '') {
-		foreach ( $items [$id] as $key => $val ) {
-			$categories .= "<option value=\"$val[id]\"" . ($val ['id'] == $category_id ? ' selected' : '') . ">" . $space . htmlspecialchars ( $val ['name'], ENT_QUOTES ) . "</option>" . NL;
-			if (isset ( $items [$val ['id']] ))
-				$categories .= $this->makeCategoryList ( $items, $val ['id'], $category_id, $space . '&nbsp;&nbsp;&nbsp;' );
-		}
-		return $categories;
-	}
+
 	function defaultRole() {
 		$this->role = User::ADMIN;
 	}
